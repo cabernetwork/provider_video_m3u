@@ -147,6 +147,10 @@ class Channels(PluginChannels):
             stream_url = urllib.parse.unquote(ch_dict['json']['stream_url'])
         else:
             stream_url = ch_dict['json']['stream_url']
+
+        if self.config_obj.data[self.config_section]['player-stream_type'] == 'm3u8redirect':
+            return stream_url
+
         return self.get_best_stream(stream_url, _channel_id)
 
     def detect_filetype(self, _filename):
