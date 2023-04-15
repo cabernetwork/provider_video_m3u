@@ -115,7 +115,7 @@ class Channels(PluginChannels):
                 else:
                     groups_other = None
 
-                ch_callsign = seg.title
+                ch_callsign = seg.title.strip()
                 channel = {
                     'id': ch_id,
                     'enabled': True,
