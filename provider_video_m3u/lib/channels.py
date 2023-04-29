@@ -64,15 +64,14 @@ class Channels(PluginChannels):
             dn_filename = self.tmp_mgmt.download_file(url, TMP_FOLDERNAME, None, file_type)
             if dn_filename is None:
                 raise exceptions.CabernetException(
-                    '{} M3U Channel Request Failed for instance {}'
+                    '{} Channel Request Failed, unable to download file for instance {}'
                     .format(self.plugin_obj.name, self.instance_key))
             m3u_file = self.extract_file(dn_filename, file_type)
             m3u8_obj = m3u8.load(str(m3u_file))
-
             ch_list = []
-            if len(m3u8_obj.segments) == 0:
+            if m3u8_obj is None or len(m3u8_obj.segments) == 0:
                 raise exceptions.CabernetException(
-                    '{} M3U Channel Request Failed for instance {}'
+                    '{} Channel Request Failed, no M3U data in the file for instance {}'
                     .format(self.plugin_obj.name, self.instance_key))
             self.logger.info("{}: Found {} stations on instance {}"
                              .format(self.plugin_obj.name, len(m3u8_obj.segments),
