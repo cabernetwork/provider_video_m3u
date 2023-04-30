@@ -127,6 +127,7 @@ class Channels(PluginChannels):
                     'groups_other': groups_other,
                     'thumbnail': thumbnail,
                     'thumbnail_size': thumbnail_size,
+                    'VOD': False,
                     'stream_url': stream_url
                 }
                 ch_list.append(channel)
