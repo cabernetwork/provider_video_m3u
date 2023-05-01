@@ -61,6 +61,8 @@ class Channels(PluginChannels):
         url = self.config_obj.data[self.config_section]['channel-m3u_file']
         file_type = self.detect_filetype(url)
         try:
+            self.ch_db_list = self.db.get_channels(self.plugin_obj.name, self.instance_key)
+
             dn_filename = self.tmp_mgmt.download_file(url, TMP_FOLDERNAME, None, file_type)
             if dn_filename is None:
                 raise exceptions.CabernetException(
@@ -99,14 +101,26 @@ class Channels(PluginChannels):
                     ch_id = None
                 ch_id = re.sub(self.url_chars, '_', ch_id)
 
+                ch_db_data = self.ch_db_list.get(ch_id)
                 if 'tvg-logo' in seg.additional_props and seg.additional_props['tvg-logo'] != '':
                     thumbnail = seg.additional_props['tvg-logo']
                     if self.config_obj.data[self.config_section]['player-decode_url']:
                         thumbnail = urllib.parse.unquote(thumbnail)
-                    thumbnail_size = self.get_thumbnail_size(thumbnail, ch_id)
                 else:
                     thumbnail = None
-                    thumbnail_size = None
+
+                if ch_db_data:
+                    enabled = ch_db_data[0]['enabled']
+                    hd = ch_db_data[0]['json']['HD']
+                    if ch_db_data[0]['json']['thumbnail'] == thumbnail:
+                        thumbnail_size = ch_db_data[0]['json']['thumbnail_size']
+                    else:
+                        thumbnail_size = self.get_thumbnail_size(thumbnail, ch_id)
+                else:
+                    enabled = True
+                    hd = 0
+                    thumbnail_size = self.get_thumbnail_size(thumbnail, ch_id)
+
                 stream_url = seg.absolute_uri
 
                 if 'group-title' in seg.additional_props:
@@ -117,11 +131,11 @@ class Channels(PluginChannels):
                 ch_callsign = seg.title.strip()
                 channel = {
                     'id': ch_id,
-                    'enabled': True,
+                    'enabled': enabled,
                     'callsign': ch_callsign,
                     'number': ch_number,
                     'name': ch_callsign,
-                    'HD': 0,
+                    'HD': hd,
                     'group_hdtv': None,
                     'group_sdtv': None,
                     'groups_other': groups_other,
@@ -143,6 +157,9 @@ class Channels(PluginChannels):
 
     def get_channel_uri(self, _channel_id):
         ch_dict = self.db.get_channel(_channel_id, self.plugin_obj.name, self.instance_key)
+        if not ch_dict:
+            return None
+
         if self.config_obj.data[self.config_section]['player-decode_url']:
             stream_url = urllib.parse.unquote(ch_dict['json']['stream_url'])
         else:
