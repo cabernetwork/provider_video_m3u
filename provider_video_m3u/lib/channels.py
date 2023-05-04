@@ -16,12 +16,14 @@ The above copyright notice and this permission notice shall be included in all c
 substantial portions of the Software.
 """
 
+import json
 import pathlib
 import re
 import urllib.request
 import urllib.parse
 
 import lib.m3u8 as m3u8
+import lib.common.utils as utils
 import lib.common.exceptions as exceptions
 from lib.plugins.plugin_channels import PluginChannels
 from lib.common.tmp_mgmt import TMPMgmt
@@ -78,6 +80,20 @@ class Channels(PluginChannels):
             self.logger.info("{}: Found {} stations on instance {}"
                              .format(self.plugin_obj.name, len(m3u8_obj.segments),
                                      self.instance_key))
+            ref_url = None
+            header = None
+            if m3u8_obj.data['session_data']:
+                for d in m3u8_obj.data['session_data']:
+                    if d['data_id'] == 'HEADER':
+                        header = d['value']
+                        if header:
+                            h_dict = json.loads(header)
+                            self.logger.debug('Using Header Session Data {}'.format(h_dict))
+                            if h_dict.get('Referer'):
+                                ref_url = h_dict.get('Referer')
+                            header = {'User-agent': utils.DEFAULT_USER_AGENT}
+                            header.update(h_dict)
+
             for seg in m3u8_obj.segments:
                 if self.is_m3u_filtered(seg):
                     continue
@@ -142,7 +158,9 @@ class Channels(PluginChannels):
                     'thumbnail': thumbnail,
                     'thumbnail_size': thumbnail_size,
                     'VOD': False,
-                    'stream_url': stream_url
+                    'stream_url': stream_url,
+                    'Header': header,
+                    'ref_url': ref_url,
                 }
                 ch_list.append(channel)
 
