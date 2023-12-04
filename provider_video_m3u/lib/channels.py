@@ -131,11 +131,11 @@ class Channels(PluginChannels):
                     if ch_db_data[0]['json']['thumbnail'] == thumbnail:
                         thumbnail_size = ch_db_data[0]['json']['thumbnail_size']
                     else:
-                        thumbnail_size = self.get_thumbnail_size(thumbnail, ch_id)
+                        thumbnail_size = self.get_thumbnail_size(thumbnail, 2, ch_id)
                 else:
                     enabled = True
                     hd = 0
-                    thumbnail_size = self.get_thumbnail_size(thumbnail, ch_id)
+                    thumbnail_size = self.get_thumbnail_size(thumbnail, 2, ch_id)
 
                 stream_url = seg.absolute_uri
 
@@ -186,7 +186,7 @@ class Channels(PluginChannels):
         if self.config_obj.data[self.config_section]['player-stream_type'] == 'm3u8redirect':
             return stream_url
 
-        return self.get_best_stream(stream_url, _channel_id)
+        return self.get_best_stream(stream_url, 2, _channel_id)
 
     def detect_filetype(self, _filename):
         file_type = self.config_obj.data[self.config_section]['channel-m3u_file_type']
