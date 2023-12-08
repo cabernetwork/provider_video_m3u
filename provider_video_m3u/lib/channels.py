@@ -65,7 +65,7 @@ class Channels(PluginChannels):
         try:
             self.ch_db_list = self.db.get_channels(self.plugin_obj.name, self.instance_key)
 
-            dn_filename = self.tmp_mgmt.download_file(url, TMP_FOLDERNAME, None, file_type)
+            dn_filename = self.tmp_mgmt.download_file(url, 2, TMP_FOLDERNAME, None, file_type)
             if dn_filename is None:
                 raise exceptions.CabernetException(
                     '{} Channel Request Failed, unable to download file for instance {}'
