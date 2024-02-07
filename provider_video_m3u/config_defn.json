@@ -56,6 +56,13 @@
                         "level": 2,
                         "help": "Default: False. For internalpproxy, when the provider stops sending packets or the stream is being filtered for 15 seconds, will send a ATSC keep-alive msg to client"
                     },
+                    "stream-g_http_session":{
+                        "label": "Maintain HTTP Session",
+                        "type": "boolean",
+                        "default": true,
+                        "level": 2,
+                        "help": "Default: true. If true, then the HTTP session will span requests.  If false, will create a new HTTP session for each request."
+                    },
                     "stream-g_stream_timeout":{
                         "label": "Stream Timeout",
                         "type": "integer",
@@ -68,7 +75,7 @@
                         "type": "integer",
                         "default": 3,
                         "level": 3,
-                        "help": "Default: 3. Only used on internalproxy. Number of parallel video packet downloads happening at one time.  A value of one means no parallel processing.  Helps when provider requests are timing out."
+                        "help": "Default: 3. Only used on internalproxy. Minimum is 0. Number of parallel video packet downloads happening at one time.  A value of one means no parallel processing.  Helps when provider requests are timing out."
                     },
                     "stream-g_http_timeout":{
                         "label": "HTTP Timeout",
@@ -82,7 +89,7 @@
                         "type": "integer",
                         "default": 3,
                         "level": 3,
-                        "help": "Default: 3. Only used on internalproxy. Number of times the HTTP video packet request occurs when errors are returned by provider"
+                        "help": "Default: 3. Only used on internalproxy. Minimum is 1. Number of times the HTTP video packet request occurs when errors are returned by provider"
                     }
                 }
             }
