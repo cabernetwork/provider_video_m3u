@@ -105,7 +105,10 @@ class Channels(PluginChannels):
                 else:
                     ch_number = self.set_channel_num(ch_number)
 
-                if 'channelID' in seg.additional_props and \
+                if 'channel-id' in seg.additional_props and \
+                        len(seg.additional_props['channel-id']) != 0:
+                    ch_id = seg.additional_props['channel-id']
+                elif 'channelID' in seg.additional_props and \
                         len(seg.additional_props['channelID']) != 0:
                     ch_id = seg.additional_props['channelID']
                 elif 'tvg-id' in seg.additional_props and \
