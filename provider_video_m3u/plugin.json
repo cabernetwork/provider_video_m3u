@@ -3,7 +3,7 @@
         "id": "provider_video_m3u",
         "name": "M3U",
         "version": {
-            "current": "0.1.16"
+            "current": "0.1.17"
         },
         "requires": [{
             "cabernet": {
